@@ -15,6 +15,11 @@ public:
 	void AddRate(long long id, double rate) {
 		int min_index = INT_MAX;
 		double min_rate = -1;
+		auto itr = std::find(rates_.begin(), rates_.end(), std::pair(id, rate));
+		if (itr != rates_.end()) {
+			(*itr).second = std::max((*itr).second, rate);
+			return;
+		}
 		for (int i = 0; i < kRateNum; i++) {
 			if (min_rate == -1) {
 				min_rate = rates_[i].second;
@@ -37,10 +42,10 @@ public:
 		}
 		std::sort(rate_tmp.rbegin(), rate_tmp.rend());
 		double tmp = 0;
-		for (int i = 0; i < std::min(25, static_cast<int>(rate_tmp.size())); i++) {
+		for (int i = 0; i < kRateNum; i++) {
 			tmp += rate_tmp.at(i);
 		}
-		tmp /= std::min(25, static_cast<int>(rate_tmp.size()));
+		tmp /= kRateNum;
 		return tmp;
 	}
 
